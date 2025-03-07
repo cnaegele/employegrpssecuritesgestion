@@ -1,0 +1,52 @@
+.flex-container {
+  display: flex;
+}
+.flex-container > div {
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 0px;
+  padding: 5px;
+  border-style: solid;
+  border-width: thin;
+  border-color: black;
+}
+ul {
+  list-style: none;
+  margin-left: -30px;
+  margin-right: 5px;
+  max-height: 600px;
+  overflow: auto;
+}
+li {
+  cursor: pointer;
+}
+
+.spnbtnsuppr {
+  display: inline-block;
+  width: 25px;
+}
+.empbactif0 {
+  font-style: italic;
+}
+.empchoisi {
+  color: gray;
+}
+span.emplogin {
+  font-size: small;
+  font-style: italic;
+}
+span.nomenclature {
+  font-weight: normal;
+  font-size:smaller;
+}
+#divErreur{
+  background-color:lightsalmon;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 0px;
+  padding: 5px;
+  border-style: solid;
+  border-width: thin;
+  border-color: black;
+  border-radius: 20px;
+}

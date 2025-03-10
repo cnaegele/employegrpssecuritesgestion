@@ -21,7 +21,6 @@
     import {reactive, ref} from 'vue'
     import { data } from '@/stores/data.js'
     import { getDataEmployesListe, getGroupesSecuritesListe } from '@/employegrpssecuritesgestion.js'
-    //import { sauveTypeAffaireEmployeCreation } from '@/nomenclaturedroitutilisation.js'
    let state = reactive({
         critereEmployes: "",
         bRetInactif: false   
@@ -38,8 +37,10 @@
         if (lesDatas.modeChoixEmploye === 'gestiongroupes') {
             lesDatas.idEmploye = employe.idemploye
             lesDatas.infoEmploye = `${employe.nom} ${employe.prenom} / ${employe.unite}`
-            getGroupesSecuritesListe(lesDatas)
+        } else if (lesDatas.modeChoixEmploye === 'copiegroupes') {
+            lesDatas.idEmployeCopie = employe.idemploye
         }
+        getGroupesSecuritesListe(lesDatas)
         lesDatas.employesListe = []
    }
 </script>

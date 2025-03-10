@@ -11,12 +11,12 @@
       <div v-if="lesDatas.bInGroupe == 1">
         <br>    
         <div>
-          Employé : {{ lesDatas.infoEmploye }}&nbsp;&nbsp;<button @click="choisirEmploye">choix</button>
-          
+          Employé : {{ lesDatas.infoEmploye }}&nbsp;&nbsp;<button @click="choisirEmploye">choix de l'employé</button>
+          <span v-if="lesDatas.idEmploye > 0">&nbsp;&nbsp;&nbsp;&nbsp;<button @click="choisirEmployeCopie">choix d'un employé pour copie de ses groupes</button></span>
           <!-- Utilisation du composant Dialog -->
           <Dialog
             v-model="showDialog"
-            title="Choisir l'employé"
+            :title="titleDialog"
             @cancel="onCancel"
             @confirm="onConfirm"
           >
@@ -39,11 +39,20 @@ import GroupesSecuritesListe from './components/GroupesSecuritesListe.vue';
 const lesDatas = data()
 // État pour contrôler l'affichage du dialogue
 const showDialog = ref(false);
+const titleDialog = ref(`Choisir l'employé`)
 
 const choisirEmploye = () => {
+  lesDatas.modeChoixEmploye = ref('gestiongroupes')
+  titleDialog.value = `Choisir l'employé`
   showDialog.value = true
   lesDatas.idEmployeChoix = ref(0)
-  lesDatas.modeChoixEmploye = ref('gestiongroupes')
+};
+
+const choisirEmployeCopie = () => {
+  lesDatas.modeChoixEmploye = ref('copiegroupes')
+  titleDialog.value = `Choisir un employé pour copie de ses groupes`
+  showDialog.value = true
+  lesDatas.idEmployeChoix = ref(0)
 };
 
 // Fonctions pour les actions
@@ -52,8 +61,6 @@ const onCancel = () => {
 };
 
 const onConfirm = () => {
-  console.log('Action confirmée');
-  // Logique supplémentaire ici
 }
 </script>
 

@@ -22,20 +22,34 @@ export async function getDataUserInfo(groupeSecurite, lesDatas) {
 }
 
 export async function getGroupesSecuritesListe(lesDatas) {
-    const idEmploye = lesDatas.idEmploye
+    let idEmploye = 0
+    if (lesDatas.modeChoixEmploye === 'gestiongroupes') {
+        idEmploye = lesDatas.idEmploye
+    } else if (lesDatas.modeChoixEmploye === 'copiegroupes') {
+        idEmploye = lesDatas.idEmployeCopie
+    }     
     const urlgl = `${g_devurl}/goeland/gestion_spec/employe_grpssecurites/axios/employe_groupessecurites_liste.php`
     const params = new URLSearchParams([['idemploye', idEmploye]])
-    console.log(urlgl)
     const response = await axios.get(urlgl, {params})
         .catch(function (error) {
             traiteAxiosError(error, lesDatas)
-        })      
+        })
     const groupesSecurites = response.data
-    groupesSecurites.forEach(grp => {
-        grp.boolempingrp = grp.bempingrp === 1    
-    })
-
-    lesDatas.groupesSecurites = ref(groupesSecurites)
+    console.log(lesDatas.modeChoixEmploye)
+    if (lesDatas.modeChoixEmploye === 'gestiongroupes') {     
+        groupesSecurites.forEach(grp => {
+            grp.boolempingrp = grp.bempingrp === 1    
+        })
+        lesDatas.groupesSecurites = ref(groupesSecurites)
+    } else if (lesDatas.modeChoixEmploye === 'copiegroupes') {
+        groupesSecurites.forEach(grp => {
+            if (grp.bempingrp === 1) {
+                //console.log(`A SAUVER :: idemploye: ${lesDatas.idEmploye} idgroupe: ${grp.idgroupe} valeur: true`)
+                sauveEmployeGroupeSecurite(lesDatas, lesDatas.idEmploye, grp.idgroupe, true)
+            }
+        })
+        lesDatas.modeChoixEmploye = 'gestiongroupes'
+    }
     //console.log(lesDatas.groupesSecurites)
 }
 
@@ -55,21 +69,26 @@ export async function getDataEmployesListe(lesDatas) {
             })      
         const employesListe = response.data
         lesDatas.employesListe = ref(employesListe)
-        console.log(lesDatas.employesListe)
+        //console.log(lesDatas.employesListe)
     }
 }
 
-export async function sauveTypeAffaireEmployeCreation(idEmploye, lesDatas) {
-    const idNomenclature = lesDatas.idNomenclature
-    console.log(`sauve idNomenclature:${idNomenclature} IdEmploye:${idEmploye}`)
+export async function sauveEmployeGroupeSecurite(lesDatas, idEmploye, idGroupeSecurite, boolEmpInGrp) {
+    const idEmployeUser = lesDatas.idEmployeUser
+    let action
+    if (boolEmpInGrp) {
+        action = 'sauve'
+    } else {
+        action = 'supprime'
+    }
     const odata = {
-        action: 'sauve',
-        idnomenclature: idNomenclature,
-        idemploye: idEmploye
+        action: action,
+        idemploye: idEmploye,
+        idgroupesecurite: idGroupeSecurite,
     }
     const jdata = JSON.stringify(odata)
-    const urlsn = `${g_devurl}/goeland/gestion_spec/nomenclature_droitutilisation/axios/nomenclature_employes_utilisation_sauve.php`
-    const response = await axios.post(urlsn, jdata, {
+    const urlsg = `${g_devurl}/goeland/gestion_spec/employe_grpssecurites/axios/employe_groupessecurites_sauve.php`
+    const response = await axios.post(urlsg, jdata, {
         headers: {
             'Content-Type': 'application/json'
         }
@@ -81,33 +100,7 @@ export async function sauveTypeAffaireEmployeCreation(idEmploye, lesDatas) {
     if (response.data.message.indexOf('ERREUR') == 0) {
         lesDatas.messageErreur =  response.data.message   
     }
-    getDataEmployesUtilisationListe(lesDatas)
-}
-
-export async function supprimeNomenclatureEmployeUtilisation(idEmploye, lesDatas) {
-    const idNomenclature = lesDatas.idNomenclature
-    console.log(`supprime idNomenclature:${idNomenclature} IdEmploye:${idEmploye}`)
-    const odata = {
-        action: 'supprime',
-        idnomenclature: idNomenclature,
-        idemploye: idEmploye
-    }
-    const jdata = JSON.stringify(odata)
-    console.log(jdata)
-    const urlsn = `${g_devurl}/goeland/gestion_spec/nomenclature_droitutilisation/axios/nomenclature_employes_utilisation_sauve.php`
-    const response = await axios.post(urlsn, jdata, {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .catch(function (error) {
-            traiteAxiosError(error, lesDatas)
-        })      
-    console.log(response.data)
-    if (response.data.message.indexOf('ERREUR') == 0) {
-        lesDatas.messageErreur =  response.data.message   
-    }
-    getDataEmployesUtilisationListe(lesDatas)
+    getGroupesSecuritesListe(lesDatas)
 }
 
 function traiteAxiosError(error, lesDatas) {

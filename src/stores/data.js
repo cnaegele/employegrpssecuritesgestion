@@ -11,6 +11,7 @@ export const data = defineStore('iddata', () => {
   const idEmploye = ref(0);
   const infoEmploye = ref(' - ');
   const uoEmploye = ref([]);
+  const idEmployeCopie = ref(0);
   const groupesSecurites = ref([]);
   const modeChoixEmploye = ref('gestiongroupes'); //copiegroupes
   const critereEmployes = ref('');
@@ -29,6 +30,7 @@ export const data = defineStore('iddata', () => {
     idEmploye,
     infoEmploye,
     uoEmploye,
+    idEmployeCopie,
     groupesSecurites,
     modeChoixEmploye,
     critereEmployes,

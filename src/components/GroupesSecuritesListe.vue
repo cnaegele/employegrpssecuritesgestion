@@ -15,14 +15,12 @@
     </ul>
 </template>
 <script setup>
-    //import { ref } from 'vue'
     import { data } from '@/stores/data.js'
-    //import { supprimeNomenclatureEmployeUtilisation } from '@/nomenclaturedroitutilisation.js'
+    import { sauveEmployeGroupeSecurite } from '@/employegrpssecuritesgestion.js'
     let lesDatas = data()
 
     function groupeSecuriteSauve(groupeSecurite) {
-        console.log(`A SAUVER :: idemploye: ${lesDatas.idEmploye} idgroupe: ${groupeSecurite.idgroupe} valeur: ${groupeSecurite.boolempingrp}`)
-        //lesData.idEmployeUtilisationChoix = ref(idEmploye)
-        //supprimeNomenclatureEmployeUtilisation(idEmploye, lesData)
+        //console.log(`A SAUVER :: idemploye: ${lesDatas.idEmploye} idgroupe: ${groupeSecurite.idgroupe} valeur: ${groupeSecurite.boolempingrp}`)
+        sauveEmployeGroupeSecurite(lesDatas, lesDatas.idEmploye, groupeSecurite.idgroupe, groupeSecurite.boolempingrp)
     }
  </script>
